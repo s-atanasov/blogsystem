@@ -2,9 +2,7 @@
 
 namespace Controllers;
 class PostsController extends BaseController {
-	
     
-
     public function __construct() {
         parent::__construct( get_class(), 'posts', '/views/posts/' );
     }
@@ -14,7 +12,7 @@ class PostsController extends BaseController {
 
         $template_file = DX_ROOT_DIR . $this->views_dir . 'index.php';
         
-        \Lib\View::getInstance()->render($template_file, array('posts' => $posts));
+        include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
 
     }
     
@@ -23,8 +21,7 @@ class PostsController extends BaseController {
 
         $template_file = DX_ROOT_DIR . $this->views_dir . 'view.php';
         
-        \Lib\View::getInstance()->render($template_file, array('post' => $post));
-        
-        
+        include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
+
     }
 }

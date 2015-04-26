@@ -67,11 +67,15 @@ if (isset($controller) && file_exists('controllers/' . $controller . 'Controller
     $instance = new $controller_class();
 
     // Call the object and the method
-    if( method_exists( $instance, $method ) ) {
+    if(method_exists($instance,$method)) {
             call_user_func_array(array($instance,$method),array($param));
     } else {
         // fallback to index
-        call_user_func_array(array($instance,'index'), array());
+        if(method_exists($instance,'index')) {
+            call_user_func_array(array($instance,'index'), array());
+        }else{
+            $baseController->index();
+        } 
     }
 } else {
     $baseController->index();

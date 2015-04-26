@@ -28,6 +28,7 @@ class BaseController {
 
         $logged_user = \Lib\Auth::get_instance()->get_logged_user();
         $this->logged_user = $logged_user;
+        //echo '<pre>'.print_r($this->logged_user, true).'</pre>';
     }
 
     public function index() {
