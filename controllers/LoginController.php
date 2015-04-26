@@ -54,7 +54,7 @@ class LoginController extends BaseController {
 
         $auth->logout();
 
-        header( 'Location: ' . DX_ROOT_URL );
+        header('Location: ' . DX_ROOT_URL);
         exit();
     }
     

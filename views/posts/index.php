@@ -5,6 +5,7 @@
       <th>Title</th>
       <th>Text</th>
       <th>Create Date</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
@@ -19,6 +20,11 @@
           }
           echo '<td>' . $currText . '</td>';
           echo '<td>' . $post['CreateDate']. '</td>';
+          if(!empty($this->logged_user) && $post['UserId'] == $this->logged_user['userId']){
+              echo '<td><a href="'. DX_ROOT_URL .'posts/edit/' . $post['Id'] . '">Edit</a> | <a href="'. DX_ROOT_URL .'posts/delete/' . $post['Id'] . '">Delete</a></td>';
+          }else{
+              echo '<td>No Action</td>';
+          }
           echo '</tr>';
       }
     ?>

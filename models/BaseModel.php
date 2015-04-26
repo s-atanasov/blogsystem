@@ -38,34 +38,40 @@ class BaseModel {
         return $results;
     }
 
-    public function add( $pairs ) {
+    public function add($pairs) {
         // Get keys and values separately
-        $keys = array_keys( $pairs );
+        $keys = array_keys($pairs);
         $values = array();
 
         // Escape values, like prepared statement
-        foreach( $pairs as $key => $value ) {
-                $values[] = "'" . $this->dbconn->real_escape_string( $value ) . "'";	
+        foreach($pairs as $key => $value) {
+            $newKeys[] = "'" . $key . "'";	
+            $values[] = '"' . $value . '"';
         }
 
-        $keys = implode( $keys, ',' );
-        $values = implode( $values, ',' );
+        $keys = implode($newKeys, ',');
+        $values = implode($values, ',');
+        echo '<pre>'.print_r($keys, true).'</pre>';
+        $stmt = $this->dbconn->prepare("insert into " . $this->table . " (:keys) values(:values)");
+        $stmt->execute(array('keys' => $keys, 'values' => $values));
 
-        $query = "insert into {$this->table}($keys) values($values)";
-
-// 		var_dump($query);
-
-        $this->dbconn->query( $query );
-
-        return $this->dbconn->affected_rows;
+        return $stmt->rowCount();
     }
 
-    public function delete( $id ) {
-        $query = "DELETE FROM {$this->table} WHERE id=" . intval( $id );
+    public function delete($id) {
+        
+        try {
+            
+            $stmt = $this->dbconn->prepare('DELETE FROM ' . $this->table . ' WHERE Id = :id AND userId = :userId');
+            $stmt->execute(array('id' => $id, 'userId' => $_SESSION['userId']));
+        
+            return $stmt->rowCount();
 
-        $this->dbconn->query( $query );
-
-        return $this->dbconn->affected_rows;
+        } catch(PDOException $e) {
+            echo '<p>'.$e->getMessage().'</p>';
+        }
+        
+        
     }
 
     public function update( $model ) {
