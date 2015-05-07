@@ -12,4 +12,13 @@ class PostsModel extends \Models\BaseModel {
     public function getPosts() {
         return parent::find();
     }
+    
+    public function getTags() {
+        $stmt = $this->dbconn->prepare('SELECT Id,Name FROM Tags');
+        $stmt->execute();
+
+        $results = $this->process_results($stmt);
+
+        return $results;
+    }
 }

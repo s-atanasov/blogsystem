@@ -29,5 +29,10 @@
               </div>
             </fieldset>
           </form>
+        <?php
+            if(isset($login_text)){
+               echo $login_text; 
+            }
+        ?>
     </div>
 </div>

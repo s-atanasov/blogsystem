@@ -9,6 +9,10 @@ class RegisterController extends BaseController {
     
     public function index() {
         
+        if(isset($_GET['error'])){
+            $login_text = $_GET['error'];
+        }
+        
         $template_file = DX_ROOT_DIR . $this->views_dir . 'index.php';
         
         include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
@@ -17,27 +21,34 @@ class RegisterController extends BaseController {
     public function register(){
         $result = array();
         
+        $username = addslashes($_POST['Username']);
+        $password = addslashes($_POST['Password']);
+        $confirmPassword = addslashes($_POST['ConfirmPassword']);
+        
         $auth = \Lib\Auth::get_instance();
-	//session_destroy();
         $login_text = '';
         $user = $auth->get_logged_user();
-        //echo '<pre>'.print_r($user, true).'</pre>';
-        if (empty($user) && isset($_POST['Username']) && isset($_POST['Password'])) {
+        //var_dump($username);
+        //echo '<pre>'.print_r($username, true).'</pre>';
+        //exit;
+        if (empty($user) && !empty($username) && !empty($password) && !empty($confirmPassword) && $password == $confirmPassword) {
+            
+            $register = $this->model->register($username,$password);
 
-            $logged_in = $auth->login($_POST['Username'], $_POST['Password']);
-
-            if (!$logged_in) {
-                $login_text = 'Login not successful.';
+            if (!$register) {
+                $login_text = 'Register not successful.';
+                header('Location: ' . DX_ROOT_URL . 'register/index?error='.$login_text);
+                exit();
             } else {
-                $login_text = 'Login was successful! Hi ' . $_POST['Username'];
                 header('Location: ' . DX_ROOT_URL . 'posts/index');
                 exit();
             }
+        }else{
+            $login_text = 'Data is missing or the passwords do not match.';
+            header('Location: ' . DX_ROOT_URL . 'register/index?error='.$login_text);
+            exit(); 
         }
-
-        $template_file = DX_ROOT_DIR . $this->views_dir . 'login.php';
-
-        include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
+        
     }
     
 }

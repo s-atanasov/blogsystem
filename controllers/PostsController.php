@@ -34,6 +34,8 @@ class PostsController extends BaseController {
             
             if(isset($_POST['title']) && isset($_POST['text'])){
                 
+                echo '<pre>'.print_r($_POST, true).'</pre>';
+                exit;
                 $newPost = array();
                 $newPost['Title'] = $_POST['title'];
                 $newPost['Text'] = $_POST['text'];
@@ -47,6 +49,8 @@ class PostsController extends BaseController {
                     exit();
                 }
                 
+            }else{
+                $tags = $this->model->getTags();
             }
         }
         

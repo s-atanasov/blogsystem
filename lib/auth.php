@@ -35,7 +35,7 @@ class Auth {
         
         try {
             $stmt = $dbconn->prepare('SELECT * FROM users WHERE username = :username AND password = :password LIMIT 1');
-            $stmt->execute(array('username' => $username, 'password' => $password));
+            $stmt->execute(array('username' => $username, 'password' => md5($password)));
             
             $row = $stmt->fetch(\PDO::FETCH_ASSOC);
             
