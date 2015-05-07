@@ -14,6 +14,9 @@ class LoginController extends BaseController {
             $result['Username'] = $_POST['Username'];
             $result['Password'] = $_POST['Password'];
         }
+        if(isset($_GET['error'])){
+            $login_text = $_GET['error'];
+        }
         
         $template_file = DX_ROOT_DIR . $this->views_dir . 'index.php';
         //echo '<pre>'.print_r($result, true).'</pre>';
@@ -39,6 +42,8 @@ class LoginController extends BaseController {
 
             if (!$logged_in) {
                 $login_text = 'Login not successful.';
+                header('Location: ' . DX_ROOT_URL . 'login/index?error='.$login_text);
+                exit();
             } else {
                 $login_text = 'Login was successful! Hi ' . $_POST['Username'];
                 header('Location: ' . DX_ROOT_URL . 'posts/index');
@@ -61,7 +66,6 @@ class LoginController extends BaseController {
     }
     
     public function register(){
-        
         
         $template_file = DX_ROOT_DIR . $this->views_dir . 'register.php';
 

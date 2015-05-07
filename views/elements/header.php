@@ -20,7 +20,7 @@
                                 <li>Hi <?php echo $this->logged_user['username']; ?></li>
                             <?php else : ?>
                                 <li><a href="<?php echo DX_ROOT_URL; ?>login/index" >Login</a></li>
-                                <li><a href="<?php echo DX_ROOT_URL; ?>login/register" >Register</a></li>
+                                <li><a href="<?php echo DX_ROOT_URL; ?>register/index" >Register</a></li>
                             <?php endif; ?>
                             
                         </ul>
