@@ -38,7 +38,7 @@ class BaseModel {
         return $results;
     }
 
-    public function add($pairs) {
+    public function add($pairs,$tags) {
         // Get keys and values separately
         $keys = array_keys($pairs);
         $values = array();
@@ -53,8 +53,20 @@ class BaseModel {
         $values = implode($values, ',');
 
         $stmt = $this->dbconn->query("insert into " . $this->table . " (".$keys.") values(".$values.")");
-
-        return $stmt->rowCount();
+        
+        $postId = $this->dbconn->lastInsertId();
+        
+        if(is_array($tags) && $tags != null){
+            foreach($tags as $tag){
+                $stmt = $this->dbconn->prepare('INSERT INTO tagsposts (tagId,postId) VALUES (:tagId,:postId) ');
+                $stmt->execute(array('tagId' => $tag, 'postId' => $postId));
+            }
+        }
+        
+        if($stmt->rowCount() > 0){
+            return $postId;
+        }
+        return 0;
     }
 
     public function delete($id) {
@@ -63,8 +75,15 @@ class BaseModel {
             
             $stmt = $this->dbconn->prepare('DELETE FROM ' . $this->table . ' WHERE Id = :id AND userId = :userId');
             $stmt->execute(array('id' => $id, 'userId' => $_SESSION['userId']));
-        
-            return $stmt->rowCount();
+            
+            $rowCount = $stmt->rowCount();
+            
+            if($this->table == 'posts'){
+                $stmt = $this->dbconn->prepare('DELETE FROM tagsposts WHERE postId = :id');
+                $stmt->execute(array('id' => $id));
+            }
+            
+            return $rowCount;
 
         } catch(PDOException $e) {
             echo '<p>'.$e->getMessage().'</p>';
@@ -78,14 +97,16 @@ class BaseModel {
 
         foreach( $model as $key => $value ) {
                 if( $key === 'id' ) continue;
-                $query .= "$key = '" . $this->dbconn->real_escape_string( $value ) . "',"; 
+                $query .= "$key = " . $this->dbconn->quote( $value ) . ","; 
         }
         $query = rtrim( $query, "," );
         $query .= " WHERE id = " . $model['id'];
-
-        $this->dbconn->query( $query );
-
-        return $this->dbconn->affected_rows;
+        //echo '<pre>'.print_r($query, true).'</pre>';
+        //exit;
+        $stmt = $this->dbconn->prepare( $query );
+        $stmt->execute();
+        
+        return $stmt->rowCount();
     }
 
     public function find( $args = array() ) {
