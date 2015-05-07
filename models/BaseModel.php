@@ -92,24 +92,39 @@ class BaseModel {
         
     }
 
-    public function update( $model ) {
+    public function update($model,$tags){
         $query = "UPDATE " . $this->table . " SET ";
 
-        foreach( $model as $key => $value ) {
-                if( $key === 'id' ) continue;
-                $query .= "$key = " . $this->dbconn->quote( $value ) . ","; 
+        foreach($model as $key => $value) {
+                if($key === 'id') continue;
+                $query .= "$key = " . $this->dbconn->quote($value) . ","; 
         }
-        $query = rtrim( $query, "," );
+        $query = rtrim($query, ",");
         $query .= " WHERE id = " . $model['id'];
-        //echo '<pre>'.print_r($query, true).'</pre>';
-        //exit;
-        $stmt = $this->dbconn->prepare( $query );
+
+        $stmt = $this->dbconn->prepare($query);
         $stmt->execute();
         
-        return $stmt->rowCount();
+        $postRowCount = $stmt->rowCount();
+        
+        $stmt = $this->dbconn->prepare("DELETE FROM tagsposts WHERE postId = :id");
+        $stmt->execute(array('id' => $model['id']));
+        
+        $deleteTagsCount = $stmt->rowCount();
+        
+        $count = 0;
+        if(is_array($tags) && $tags != null){
+            foreach($tags as $tag){
+                $stmt = $this->dbconn->prepare('INSERT INTO tagsposts (tagId,postId) VALUES (:tagId,:postId) ');
+                $stmt->execute(array('tagId' => $tag, 'postId' => $model['id']));
+                $count += $stmt->rowCount();
+            }
+        }
+        
+        return $postRowCount + $deleteTagsCount + $count;
     }
 
-    public function find( $args = array() ) {
+    public function find($args = array()){
         $args = array_merge( array(
             'table' => $this->table,
             'where' => '',
@@ -137,7 +152,7 @@ class BaseModel {
         return $results;
     }
 
-    protected function process_results( $result_set ) {
+    protected function process_results($result_set){
         $results = array();
 
         if(!empty($result_set)) {

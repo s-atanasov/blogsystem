@@ -1,5 +1,5 @@
 
-<form class="form-horizontal" action="<?php echo DX_ROOT_URL; ?>posts/edit" method="POST">
+<form class="form-horizontal" action="<?php echo DX_ROOT_URL; ?>posts/edit/<?php echo $post[0]['Id']; ?>" method="POST">
     <div class="row">
         <div class="col-md-2">Title :</div>
         <div class="col-md-10">

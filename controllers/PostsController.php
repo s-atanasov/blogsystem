@@ -90,32 +90,40 @@ class PostsController extends BaseController {
             $updatePost['title'] = $_POST['title'];
             $updatePost['text'] = $_POST['text'];
             
-            $post = $this->model->update($updatePost);
+            $tags = array();
+                
+            if(isset($_POST['tags'])){
+                $tagsPost = $_POST['tags'];
+                for($i = 0; $i < count($tagsPost) ;$i++) {
+                    $tags[] = $tagsPost[$i];
+                }
+            }
             
+            $post = $this->model->update($updatePost,$tags);
+
             if($post > 0){
                 header('Location: ' . DX_ROOT_URL . 'posts/index');
                 exit();
             }
             $error = 'Cannot update post';
             
-        }else{
-            $result = '';
-            if(empty($this->logged_user)){
-                $result = 'Not Logged in';
-            }else{
-                $post = $this->model->get($id);
-                $allTags = $this->model->getTags();
-                $tags = $this->model->getTags($id);
-
-                $postTags = array();
-                foreach ($tags as $tag) {
-                    $postTags[] = $tag['Name'];
-                }
-
-            }
         }
         
+        $result = '';
+        if(empty($this->logged_user)){
+            $result = 'Not Logged in';
+        }else{
+            $post = $this->model->get($id);
+            $allTags = $this->model->getTags();
+            $tags = $this->model->getTags($id);
 
+            $postTags = array();
+            foreach ($tags as $tag) {
+                $postTags[] = $tag['Name'];
+            }
+
+        }
+        
         $template_file = DX_ROOT_DIR . $this->views_dir . 'edit.php';
         
         include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
