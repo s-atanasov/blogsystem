@@ -38,12 +38,12 @@ class PostsController extends BaseController {
                 $newPost['Title'] = $_POST['title'];
                 $newPost['Text'] = $_POST['text'];
                 $newPost['UserId'] = $_SESSION['userId'];
-                //$newPost['CreateDate'] = date("m.d.y");
+                $newPost['CreateDate'] = date("y.m.d");
                 
                 $postId = $this->model->add($newPost);
                 
                 if($postId > 0){
-                    header('Location: ' . DX_ROOT_URL . 'posts');
+                    header('Location: ' . DX_ROOT_URL . 'posts/index');
                     exit();
                 }
                 
@@ -81,6 +81,8 @@ class PostsController extends BaseController {
         
             if($post > 0){
                 $result = 'Delete successfull';
+                header('Location: ' . DX_ROOT_URL . 'posts/index');
+                exit();
             }else{
                 $result = 'Delete Fail';
             } 

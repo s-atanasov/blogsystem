@@ -41,6 +41,8 @@ class LoginController extends BaseController {
                 $login_text = 'Login not successful.';
             } else {
                 $login_text = 'Login was successful! Hi ' . $_POST['Username'];
+                header('Location: ' . DX_ROOT_URL . 'posts/index');
+                exit();
             }
         }
 
@@ -56,6 +58,14 @@ class LoginController extends BaseController {
 
         header('Location: ' . DX_ROOT_URL);
         exit();
+    }
+    
+    public function register(){
+        
+        
+        $template_file = DX_ROOT_DIR . $this->views_dir . 'register.php';
+
+        include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
     }
     
 }

@@ -45,15 +45,14 @@ class BaseModel {
 
         // Escape values, like prepared statement
         foreach($pairs as $key => $value) {
-            $newKeys[] = "'" . $key . "'";	
+            $newKeys[] = $key;	
             $values[] = '"' . $value . '"';
         }
 
         $keys = implode($newKeys, ',');
         $values = implode($values, ',');
-        echo '<pre>'.print_r($keys, true).'</pre>';
-        $stmt = $this->dbconn->prepare("insert into " . $this->table . " (:keys) values(:values)");
-        $stmt->execute(array('keys' => $keys, 'values' => $values));
+
+        $stmt = $this->dbconn->query("insert into " . $this->table . " (".$keys.") values(".$values.")");
 
         return $stmt->rowCount();
     }

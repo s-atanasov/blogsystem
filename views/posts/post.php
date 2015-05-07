@@ -4,13 +4,13 @@
     <div class="form-group">
       <label for="inputTitle" class="col-lg-2 control-label">Title</label>
       <div class="col-lg-10">
-        <input type="text" class="form-control" name="title" id="inputTitle" placeholder="Title">
+        <input type="text" required class="form-control" name="title" id="inputTitle" placeholder="Title">
       </div>
     </div>
     <div class="form-group">
       <label for="textArea" class="col-lg-2 control-label">Text</label>
       <div class="col-lg-10">
-        <textarea class="form-control" rows="3" name="text" id="textArea">Text</textarea>
+        <textarea required class="form-control" rows="3" name="text" id="textArea"></textarea>
       </div>
     </div>
     <div class="form-group">
