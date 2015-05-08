@@ -18,15 +18,35 @@ class PostsController extends BaseController {
     
     public function view($id) {
         $post = $this->model->get($id);
+        
         if(empty($post)){
             header('Location: ' . DX_ROOT_URL . 'posts/index');
             exit();
         }
+        
+        if(isset($_POST['Submit'])){
+            
+            $newComment = array();
+            $newComment['AuthorName'] = $_POST['name'];
+            $newComment['Text'] = $_POST['text'];
+            $newComment['AuthorEmail'] = $_POST['email'];
+            $newComment['PostId'] = $_POST['id'];
+            
+            $commentId = $this->model->addComment($newComment);
+            
+            $commentStatus = '';
+            if($commentId > 0){
+                $commentStatus = 'Comment added successfully';
+            }else{
+                $commentStatus = 'Comment fail';
+            }
+            
+        }
+        
         $username = $this->model->getUsername($post[0]['UserId']);
-        //echo '<pre>'.print_r($username, true).'</pre>';
-        //exit;
         
         $tags = $this->model->getTags($id);
+        $comments = $this->model->getComments($id);
         
         $postTags = array();
         foreach ($tags as $tag) {
@@ -65,7 +85,6 @@ class PostsController extends BaseController {
 
                 $postId = $this->model->add($newPost,$tags);
                 
-                echo '<pre>'.print_r($postId, true).'</pre>';
                 if($postId > 0){
                     header('Location: ' . DX_ROOT_URL . 'posts/index');
                     exit();
