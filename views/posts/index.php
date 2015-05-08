@@ -1,23 +1,28 @@
 <input type='text' id='search' name='search' />
-<button name='DoSearch' onClick='DoSearch()' >Search by Tags</button>
+<button name='DoSearch' id='searchButton' onClick='DoSearch()' >Search by Tags</button>
+<div id='searchStatus'></div>
 <script>
     
     function DoSearch(){
         
-        if($('#search').val() != ''){
-            //alert($('#search').val());
-            $.ajax({
-                type: "POST", 
-                url: "<?php echo DX_ROOT_URL ?>posts/search/",
-                data: "search="+$('#search').val(),
-                success: function(html) {
-                    //console.log(html);
-                    renderPosts(html);
+        sessionStorage.Posts = '';
+        sessionStorage.Search = '';
+        $('#searchStatus').empty();
+        $.ajax({
+            type: "POST", 
+            url: "<?php echo DX_ROOT_URL ?>posts/search/",
+            data: "search="+$('#search').val(),
+            success: function(html) {
+                //console.log(html);
+                renderPosts(html);
+                if($('#search').val() != ''){
+                    sessionStorage.Posts = html;
+                    sessionStorage.Search = $('#search').val();
+                    $('#searchStatus').append('Search for <b>' + $('#search').val() + '</b>');
                 }
-            });
-        }else{
-            alert('Please enter keyword');
-        }
+                
+            }
+        });
     }
     
     function renderPosts(posts){
@@ -39,8 +44,7 @@
             }
             html += '<td>' + currText + '</td>';
             html += '<td>' + posts[i].CreateDate + '</td>';
-          
-          
+            
             if(posts[i].UserId == "<?php echo (isset($this->logged_user['userId'])) ? $this->logged_user['userId'] : '0'; ?>" ){
                 html += '<td><a href="<?php echo DX_ROOT_URL; ?>posts/edit/' + posts[i].Id + '">Edit</a> | <a href="<?php echo DX_ROOT_URL; ?>posts/delete/' + posts[i].Id + '">Delete</a></td>';
             }else{
@@ -53,7 +57,14 @@
     }
     
     $(document).ready(function(){
-        renderPosts('<?php echo json_encode($posts); ?>');
+        
+        if(sessionStorage.Posts != ''){
+            renderPosts(sessionStorage.Posts);
+            $('#searchStatus').append('Search for <b>' + sessionStorage.Search + '</b>');
+        }else{
+            renderPosts('<?php echo json_encode($posts); ?>');
+        }
+        
     });
 </script>
 <table class="table table-striped table-hover ">
@@ -67,6 +78,5 @@
     </tr>
   </thead>
   <tbody>
-    
   </tbody>
 </table> 

@@ -10,7 +10,8 @@ class UserModel extends \Models\BaseModel {
     }
     
     public function getPostByUserId($id){
-        $stmt = $this->dbconn->prepare('SELECT Id,Title,Text,UserId,CreateDate FROM posts WHERE UserId=:id');
+        $stmt = $this->dbconn->prepare('SELECT Id,Title,Text,UserId,CreateDate FROM posts 
+                                        WHERE UserId=:id ORDER BY Id DESC');
         $stmt->execute(array('id' => $id));
         
         $results = $this->process_results($stmt);

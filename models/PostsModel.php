@@ -97,11 +97,12 @@ class PostsModel extends \Models\BaseModel {
     
     public function searchByTags($search){
         
-        $stmt = $this->dbconn->prepare('SELECT po.Id, po.Title,po.Text, po.UserId, po.CreateDate, po.VisitCount
+        $stmt = $this->dbconn->prepare('SELECT DISTINCT po.Id, po.Title,po.Text, po.UserId, po.CreateDate, po.VisitCount
                                         FROM posts AS po
                                         INNER JOIN tagsposts AS tapo ON tapo.postId = po.Id
                                         INNER JOIN tags AS ta ON ta.Id = tapo.tagId
-                                        WHERE ta.Name LIKE \'%'. $search .'%\' ');
+                                        WHERE ta.Name LIKE \'%'. $search .'%\' 
+                                        ORDER BY po.Id DESC');
         
         $stmt->execute();
         

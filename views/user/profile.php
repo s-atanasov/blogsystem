@@ -12,9 +12,11 @@
   </thead>
   <tbody>
     <?php
+      $count = count($userPosts);
       foreach ($userPosts as $post) {
           echo '<tr>';
-          echo '<td>' . $post['Id']. '</td>';
+          echo '<td>' . $count . '</td>';
+          $count--;
           echo '<td><a href="'. DX_ROOT_URL .'posts/view/' . $post['Id'] . '" >' . $post['Title']. '</a></td>';
           $currText = $post['Text'];
           if(strlen($currText) > 18){
