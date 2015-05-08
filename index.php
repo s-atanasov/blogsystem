@@ -43,26 +43,26 @@ if (!empty($request)) {
 
         // Fetch the controller, method and params if any
         $components = explode(DX_DS,$request,3);
-
+        
         // Get controller and such
         if (count($components) > 1) {
             list( $controller, $method ) = $components;
-
+            
             $param = isset( $components[2] ) ? $components[2] : array();
         }
     }
 }
 
 // If the controller is found
-if (isset($controller) && file_exists('controllers/' . $controller . 'Controller.php')) {
+if (isset($controller) && file_exists('controllers/' . ucfirst($controller) . 'Controller.php')) {
     $admin_folder = $admin_routing ? 'admin/' : '';
-    include_once 'controllers/' . $admin_folder . $controller . 'Controller.php';
-
+    include_once 'controllers/' . $admin_folder . ucfirst($controller) . 'Controller.php';
+    
     // Is admin controller?
     $admin_namespace = $admin_routing ? '\Admin' : '';
 
     // Form the controller class
-    $controller_class = $admin_namespace . '\Controllers\\' . ucfirst( $controller ) . 'Controller';
+    $controller_class = $admin_namespace . '\Controllers\\' . ucfirst($controller) . 'Controller';
 
     $instance = new $controller_class();
 

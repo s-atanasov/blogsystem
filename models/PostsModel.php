@@ -15,10 +15,10 @@ class PostsModel extends \Models\BaseModel {
     
     public function getTags($id = 0) {
         if($id == 0){
-            $stmt = $this->dbconn->prepare('SELECT Id,Name FROM Tags');
+            $stmt = $this->dbconn->prepare('SELECT Id,Name FROM tags');
             $stmt->execute();
         }else{
-            $stmt = $this->dbconn->prepare('SELECT tag.Name FROM Tags as tag
+            $stmt = $this->dbconn->prepare('SELECT tag.Name FROM tags as tag
                                                 INNER JOIN tagsposts as tp
                                                 ON tag.Id = tp.tagId
                                                 WHERE tp.postId=:id');
@@ -31,7 +31,7 @@ class PostsModel extends \Models\BaseModel {
     }
     
     public function getUsername($userId){
-        $stmt = $this->dbconn->prepare('SELECT username FROM Users WHERE Id=:id');
+        $stmt = $this->dbconn->prepare('SELECT username FROM users WHERE Id=:id');
         $stmt->execute(array('id' => $userId));
         
         $results = $this->process_results($stmt);
@@ -41,7 +41,7 @@ class PostsModel extends \Models\BaseModel {
     
     public function getComments($id){
         
-        $stmt = $this->dbconn->prepare('SELECT Id,Text,AuthorName,AuthorEmail FROM Comments WHERE PostId=:id
+        $stmt = $this->dbconn->prepare('SELECT Id,Text,AuthorName,AuthorEmail FROM comments WHERE PostId=:id
                                         ORDER BY Id DESC');
         $stmt->execute(array('id' => $id));
         
@@ -85,13 +85,29 @@ class PostsModel extends \Models\BaseModel {
     
     public function updateVisitCounter($id){
         
-        $stmt = $this->dbconn->prepare('SELECT VisitCount FROM Posts WHERE Id = :id');
+        $stmt = $this->dbconn->prepare('SELECT VisitCount FROM posts WHERE Id = :id');
         $stmt->execute(array('id' => $id));
         
         $results = $this->process_results($stmt);
         
-        $stmt = $this->dbconn->prepare('UPDATE Posts SET VisitCount = :count WHERE Id = :id');
+        $stmt = $this->dbconn->prepare('UPDATE posts SET VisitCount = :count WHERE Id = :id');
         $stmt->execute(array('count' => (int)$results[0]['VisitCount'] + 1, 'id' => $id));
+        
+    }
+    
+    public function searchByTags($search){
+        
+        $stmt = $this->dbconn->prepare('SELECT po.Id, po.Title,po.Text, po.UserId, po.CreateDate, po.VisitCount
+                                        FROM posts AS po
+                                        INNER JOIN tagsposts AS tapo ON tapo.postId = po.Id
+                                        INNER JOIN tags AS ta ON ta.Id = tapo.tagId
+                                        WHERE ta.Name LIKE \'%'. $search .'%\' ');
+        
+        $stmt->execute();
+        
+        $results = $this->process_results($stmt);
+        
+        return $results;
         
     }
     

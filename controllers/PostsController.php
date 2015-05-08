@@ -200,4 +200,15 @@ class PostsController extends BaseController {
         }
     }
     
+    public function search(){
+        $posts = array();
+        
+        $searchWord = $_POST['search'];
+        
+        $posts = $this->model->searchByTags($searchWord);
+        
+        echo json_encode($posts);
+        exit();
+    }
+    
 }

@@ -139,6 +139,8 @@ class BaseModel {
         if(!empty($where)){
             $query .= ' where ' . $where;
         }
+        
+        $query .= ' order by Id desc';
 
         if(!empty($limit)){
             $query .= ' limit ' . $limit;

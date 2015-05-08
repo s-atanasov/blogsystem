@@ -14,15 +14,15 @@ class BaseController {
 
     protected $logged_user = array();
 
-    public function __construct( $class_name = '\Controllers\BaseController', $model = 'base', $views_dir = '/views/base/' ) {
+    public function __construct( $class_name = '\Controllers\BaseController', $model = 'Base', $views_dir = '/views/base/' ) {
         // Get caller classes
         $this->class_name = $class_name;
 
         $this->model = $model;
         $this->views_dir = $views_dir;
 
-        include_once DX_ROOT_DIR . "models/{$model}Model.php";
-        $model_class = "\Models\\" . ucfirst( $model ) . "Model";  
+        include_once DX_ROOT_DIR . "models/" . ucfirst($model) . "Model.php";
+        $model_class = "\Models\\" . ucfirst($model) . "Model";  
 
         $this->model = new $model_class( array( 'table' => 'none' ) );
 
