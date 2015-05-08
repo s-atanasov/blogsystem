@@ -36,11 +36,16 @@
             if(empty($comments)){
                 echo 'No Comments yet.';
             }else{
-                //echo '<pre>'.print_r($comments, true).'</pre>';
+                //echo '<pre>'.print_r($post, true).'</pre>';
                 $count = count($comments);
+                
                 foreach ($comments as $comment) {
+                    $deletelink = '';
+                    if(!empty($this->logged_user) && $post[0]['UserId'] == $this->logged_user['userId']){
+                        $deletelink = '<a href="'. DX_ROOT_URL .'posts/deleteComment/' . $comment['Id'] . '/'.$post[0]['Id'].'">Delete</a>';
+                    }
                     echo '<div>---------------------------</div>';
-                    echo '<div><b>Comment #' . $count . '</b></div>';
+                    echo '<div><b>Comment #' . $count . '</b> '.$deletelink.'</div>';
                     echo '<div><b>Name:</b> '.$comment['AuthorName'].'</div>';
                     $email = 'No Email';
                     if(!empty($comment['AuthorEmail'])){

@@ -16,6 +16,7 @@
                             <li><a href="<?php echo DX_ROOT_URL; ?>posts/index" >Posts</a></li>
                             <?php if(!empty($this->logged_user)): ?>
                                 <li><a href="<?php echo DX_ROOT_URL; ?>posts/post" >New Post</a></li>
+                                <li><a href="<?php echo DX_ROOT_URL; ?>user/profile" >Profile</a></li>
                                 <li><a href="<?php echo DX_ROOT_URL; ?>login/logout" >Logout</a></li>
                                 <li>Hi <?php echo $this->logged_user['username']; ?></li>
                             <?php else : ?>

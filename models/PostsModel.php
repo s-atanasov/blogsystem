@@ -75,4 +75,12 @@ class PostsModel extends \Models\BaseModel {
         return 0;
     }
     
+    public function deleteComment($commentId,$postId){
+
+        $stmt = $this->dbconn->prepare('DELETE FROM comments WHERE Id = :commentId AND PostId = :Id');
+        $stmt->execute(array('commentId' => $commentId, 'Id' => $postId));
+
+        return $stmt->rowCount();
+    }
+    
 }

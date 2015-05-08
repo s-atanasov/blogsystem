@@ -172,4 +172,27 @@ class PostsController extends BaseController {
         include_once DX_ROOT_DIR . '/views/layouts/' . $this->layout;
 
     }
+    
+    public function deleteComment($ids){
+        
+        $ids = explode('/', $ids);
+        $commentId = $ids[0];
+        $postId = $ids[1];
+        
+        if(empty($this->logged_user)){
+            echo 'Not Logged in';
+            exit;
+        }else{
+           $comment = $this->model->deleteComment($commentId,$postId);
+        
+            if($comment > 0){
+                $result = 'Delete successfull';
+                header('Location: ' . DX_ROOT_URL . 'posts/view/' . $postId);
+                exit();
+            }else{
+                $result = 'Delete Fail';
+            } 
+        }
+    }
+    
 }
