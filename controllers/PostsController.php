@@ -41,6 +41,11 @@ class PostsController extends BaseController {
                 $commentStatus = 'Comment fail';
             }
             
+        }else{
+            if(isset($_SERVER['HTTP_REFERER'])){
+                $this->model->updateVisitCounter($id);
+                $post = $this->model->get($id);
+            }
         }
         
         $username = $this->model->getUsername($post[0]['UserId']);

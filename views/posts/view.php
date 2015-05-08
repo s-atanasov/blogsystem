@@ -1,4 +1,9 @@
-
+<div class="row">
+    <div class="col-md-2">Visits :</div>
+    <div class="col-md-10">
+        <?php echo $post[0]['VisitCount']; ?>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-2">Title :</div>
     <div class="col-md-10">

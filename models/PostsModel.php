@@ -83,4 +83,16 @@ class PostsModel extends \Models\BaseModel {
         return $stmt->rowCount();
     }
     
+    public function updateVisitCounter($id){
+        
+        $stmt = $this->dbconn->prepare('SELECT VisitCount FROM Posts WHERE Id = :id');
+        $stmt->execute(array('id' => $id));
+        
+        $results = $this->process_results($stmt);
+        
+        $stmt = $this->dbconn->prepare('UPDATE Posts SET VisitCount = :count WHERE Id = :id');
+        $stmt->execute(array('count' => (int)$results[0]['VisitCount'] + 1, 'id' => $id));
+        
+    }
+    
 }
