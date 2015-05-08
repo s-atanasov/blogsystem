@@ -4,6 +4,7 @@
         <title>Blog System</title>
         <link rel="stylesheet" href="/blogsystem/lib/bootstrap.css">
         <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="/blogsystem/lib/posts.js"></script>
     </head>
     <body>
         <div id="container">
